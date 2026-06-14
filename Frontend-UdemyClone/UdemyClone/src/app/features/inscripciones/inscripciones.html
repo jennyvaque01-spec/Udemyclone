@@ -1,0 +1,125 @@
+<div class="crud-page">
+  <div class="page-header">
+    <div><h1>Inscripciones</h1><p>Gestiona las inscripciones de estudiantes</p></div>
+    <button class="btn-add" (click)="openCreate()"> Nueva Inscripción</button>
+  </div>
+
+  @if (successMsg()) { <div class="toast-success">{{ successMsg() }}</div> }
+
+  <div class="search-bar">
+    <span></span>
+    <input type="text" placeholder="Buscar por estudiante o curso..."
+           [value]="searchTerm()"
+           (input)="searchTerm.set($any($event.target).value)" />
+    <span class="count-badge">{{ filtered.length }} registros</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state"><div class="spinner spinner-lg"></div><p>Cargando...</p></div>
+  }
+
+  @if (!loading()) {
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Estudiante</th><th>Curso</th><th>Precio</th><th>Cupón</th><th>Fecha</th><th>Acc.</th></tr>
+          </thead>
+          <tbody>
+            @for (i of filtered; track i.inscripcionId; let idx = $index) {
+              <tr>
+                <td><span class="row-num">{{ idx + 1 }}</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar">{{ i.estudianteNombre.charAt(0) }}</div>
+                    <span>{{ i.estudianteNombre }}</span>
+                  </div>
+                </td>
+                <td><span class="curso-name">{{ i.cursoTitulo }}</span></td>
+                <td><span class="precio-tag">${{ i.precioPagado | number:'1.2-2' }}</span></td>
+                <td>
+                  @if (i.cuponCodigo) {
+                    <span class="cupon-tag">{{ i.cuponCodigo }}</span>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+                <td>{{ i.fechaInscripcion | date:'dd/MM/yy' }}</td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-del" (click)="confirmDelete(i.inscripcionId)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr><td colspan="7" class="empty-row">No hay inscripciones</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2> Nueva Inscripción</h2>
+        <button class="modal-x" (click)="closeModal()">✕</button>
+      </div>
+      @if (errorMsg()) { <div class="alert-error">{{ errorMsg() }}</div> }
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Estudiante </label>
+            <select formControlName="estudianteId">
+              <option [ngValue]="0">Seleccionar...</option>
+              @for (e of estudiantes; track e.estudianteId) {
+                <option [ngValue]="e.estudianteId">{{ e.nombre }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Curso *</label>
+            <select formControlName="cursoId">
+              <option [ngValue]="0">Seleccionar...</option>
+              @for (c of cursos; track c.cursoId) {
+                <option [ngValue]="c.cursoId">{{ c.titulo }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio Pagado </label>
+            <input type="number" formControlName="precioPagado" min="0" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>Cupón (opcional)</label>
+            <input type="text" formControlName="cuponCodigo" placeholder="DESCUENTO10"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="form.invalid">Crear Inscripción</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showConfirm()) {
+  <div class="modal-overlay" (click)="closeConfirm()">
+    <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"></div>
+      <h2>¿Eliminar inscripción?</h2>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-footer center">
+        <button class="btn-cancel" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,142 @@
+<div class="crud-page">
+  <div class="page-header">
+    <div><h1>Cursos</h1><p>Gestiona el catálogo de cursos</p></div>
+    <button class="btn-add" (click)="openCreate()">Nuevo Curso</button>
+  </div>
+
+  @if (successMsg()) { <div class="toast-success">{{ successMsg() }}</div> }
+
+  <div class="search-bar">
+    <span></span>
+    <input type="text" placeholder="Buscar por título o categoría..."
+           [value]="searchTerm()"
+           (input)="searchTerm.set($any($event.target).value)" />
+    <span class="count-badge">{{ filtered.length }} registros</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state"><div class="spinner spinner-lg"></div><p>Cargando cursos...</p></div>
+  }
+
+  @if (!loading()) {
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Título</th><th>Categoría</th><th>Precio</th><th>Nivel</th><th>Idioma</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            @for (c of filtered; track c.cursoId; let i = $index) {
+              <tr>
+                <td><span class="row-num">{{ i + 1 }}</span></td>
+                <td>
+                  <div class="curso-cell">
+                    <span></span>
+                    <span class="curso-titulo">{{ c.titulo }}</span>
+                  </div>
+                </td>
+                <td><span class="badge-neutral">{{ c.categoriaNombre }}</span></td>
+                <td><span class="precio-tag">${{ c.precio }}</span></td>
+                <td>
+                  <span class="nivel-badge"
+                        [style.background]="nivelColor(c.nivel) + '22'"
+                        [style.color]="nivelColor(c.nivel)"
+                        [style.border-color]="nivelColor(c.nivel) + '44'">
+                    {{ c.nivel }}
+                  </span>
+                </td>
+                <td>{{ c.idioma }}</td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-edit" (click)="openEdit(c)"></button>
+                    <button class="btn-del"  (click)="confirmDelete(c.cursoId)"></button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr><td colspan="7" class="empty-row">No se encontraron cursos</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editMode() ? ' Editar' : ' Nuevo' }} Curso</h2>
+        <button class="modal-x" (click)="closeModal()">✕</button>
+      </div>
+      @if (errorMsg()) { <div class="alert-error"> {{ errorMsg() }}</div> }
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Título *</label>
+          <input type="text" formControlName="titulo" placeholder="Ej: Introducción a Python"
+                 [class.error]="form.get('titulo')?.invalid && form.get('titulo')?.touched"/>
+          @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+            <span class="error-text">Título requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea formControlName="descripcion" placeholder="Descripción del curso..." rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio *</label>
+            <input type="number" formControlName="precio" min="0" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>Categoría </label>
+            <select formControlName="categoriaId">
+              <option [ngValue]="0">Seleccionar...</option>
+              @for (c of categorias; track c.categoriaId) {
+                <option [ngValue]="c.categoriaId">{{ c.nombre }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nivel</label>
+            <select formControlName="nivel">
+              @for (n of niveles; track n) {
+                <option [value]="n">{{ n }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Idioma</label>
+            <select formControlName="idioma">
+              @for (i of idiomas; track i) {
+                <option [value]="i">{{ i }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="form.invalid">{{ editMode() ? 'Actualizar' : 'Crear' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showConfirm()) {
+  <div class="modal-overlay" (click)="closeConfirm()">
+    <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"></div>
+      <h2>¿Eliminar curso?</h2>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-footer center">
+        <button class="btn-cancel" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+}

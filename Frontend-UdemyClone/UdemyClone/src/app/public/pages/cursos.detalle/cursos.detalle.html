@@ -1,0 +1,415 @@
+@if (loading()) {
+  <div class="loading-page">
+    <div class="spinner-xl"></div>
+    <p>Cargando curso...</p>
+  </div>
+}
+
+@if (!loading() && curso()) {
+
+  @if (showExito()) {
+    <div class="toast-exito">
+       ¡Inscripción exitosa! Ya puedes acceder a todo el contenido.
+    </div>
+  }
+
+  <section class="curso-hero">
+    <div class="container hero-grid">
+
+      <div class="hero-info">
+
+        <div class="breadcrumb">
+          <a routerLink="/">Inicio</a>
+          <span>›</span>
+          <a routerLink="/cursos">Cursos</a>
+          <span>›</span>
+          <span>{{ curso()!.categoriaNombre }}</span>
+        </div>
+
+        <h1>{{ curso()!.titulo }}</h1>
+
+        <p class="hero-desc">
+          {{ curso()!.descripcion || 'Aprende todo lo necesario sobre este tema con instructores expertos de la industria tecnológica.' }}
+        </p>
+
+        <div class="hero-meta">
+          <span class="meta-badge"
+                [style.background]="nivelColor(curso()!.nivel) + '22'"
+                [style.color]="nivelColor(curso()!.nivel)"
+                [style.border-color]="nivelColor(curso()!.nivel) + '44'">
+             {{ curso()!.nivel }}
+          </span>
+          <span class="meta-badge cat"> {{ curso()!.categoriaNombre }}</span>
+          <span class="meta-badge lang">{{ curso()!.idioma }}</span>
+        </div>
+
+        <div class="hero-rating">
+          <span class="rn">{{ promedioRating }}</span>
+          <span class="stars">{{ stars(+promedioRating) }}</span>
+          <span class="rc">({{ resenas().length || 128 }} valoraciones)</span>
+          <span class="sep">·</span>
+          <span class="rc">{{ totalLecciones }} lecciones</span>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hs-item">
+            <span class="hs-icon"></span>
+            <span>{{ totalLecciones }} lecciones</span>
+          </div>
+          <div class="hs-item">
+            <span class="hs-icon"></span>
+            <span>5h 45min total</span>
+          </div>
+          <div class="hs-item">
+            <span class="hs-icon"></span>
+            <span>Certificado incluido</span>
+          </div>
+          <div class="hs-item">
+            <span class="hs-icon"></span>
+            <span>Acceso de por vida</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hero-card-wrap">
+        <div class="hero-card" [class.inscrito]="inscrito()">
+
+          <div class="card-thumb">
+            <span class="thumb-emoji"></span>
+            @if (inscrito()) {
+              <div class="thumb-overlay inscrito">
+                Inscrito
+              </div>
+            }
+          </div>
+
+          <div class="card-precio">
+            <div class="precio-row">
+              <span class="precio-gratis">GRATIS</span>
+              <span class="precio-original">${{ curso()!.precio }}</span>
+              <span class="precio-desc">¡100% descuento!</span>
+            </div>
+          </div>
+
+          @if (inscrito()) {
+            <div class="progreso-section">
+              <div class="progreso-header">
+                <span>Tu progreso</span>
+                <span class="progreso-num">{{ progresoReal }}%</span>
+              </div>
+              <div class="progreso-bar">
+                <div class="progreso-fill"
+                     [style.width.%]="progresoReal">
+                </div>
+              </div>
+              <div class="progreso-detail">
+                {{ leccionesCompletadas }} / {{ totalLecciones }} lecciones completadas
+              </div>
+            </div>
+          }
+
+          @if (!inscrito()) {
+            <div class="metodos-pago">
+              <p class="mp-titulo">Elige cómo inscribirte:</p>
+
+              <button class="btn-metodo gratis"
+                      (click)="seleccionarMetodo('gratis')">
+                <span class="bm-icon"></span>
+                <div class="bm-info">
+                  <strong>Acceso Gratuito</strong>
+                  <span>Sin costo · Acceso inmediato</span>
+                </div>
+                <span class="bm-arrow"></span>
+              </button>
+
+              <button class="btn-metodo deposito"
+                      (click)="seleccionarMetodo('deposito')">
+                <span class="bm-icon"></span>
+                <div class="bm-info">
+                  <strong>Pago por Depósito</strong>
+                  <span>Transferencia bancaria · ${{ curso()!.precio }}</span>
+                </div>
+                <span class="bm-arrow">→</span>
+              </button>
+
+            </div>
+          }
+
+          @if (inscrito()) {
+            <div class="inscrito-msg">
+               Ya estás inscrito en este curso
+            </div>
+          }
+
+          <div class="card-incluye">
+            <h4>Este curso incluye:</h4>
+            <ul>
+              <li>Acceso de por vida</li>
+              <li>Desde móvil y PC</li>
+              <li>Certificado oficial</li>
+              <li>Recursos descargables</li>
+              <li>Soporte del instructor</li>
+            </ul>
+          </div>
+
+          <a routerLink="/cursos" class="btn-ver-mas">← Ver más cursos</a>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="learn-section">
+    <div class="container">
+      <h2>Lo que aprenderás</h2>
+      <div class="learn-grid">
+        @for (item of loQueAprenderas; track item) {
+          <div class="learn-item">
+            <span class="li-check"></span>
+            <span>{{ item }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="req-section">
+    <div class="container">
+      <h2>Requisitos</h2>
+      <ul class="req-list">
+        @for (r of requisitos; track r) {
+          <li>
+            <span class="req-dot"></span>
+            {{ r }}
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <div class="content-header">
+        <h2>Contenido del curso</h2>
+        <span class="content-summary">
+          {{ secciones.length }} secciones · {{ totalLecciones }} lecciones · 5h 45 min
+        </span>
+      </div>
+
+      @if (inscrito()) {
+        <div class="progreso-global">
+          <div class="pg-header">
+            <span>Progreso del curso</span>
+            <span>{{ leccionesCompletadas }}/{{ totalLecciones }} lecciones</span>
+          </div>
+          <div class="pg-bar">
+            <div class="pg-fill"
+                 [style.width.%]="progresoReal"
+                 [style.transition]="'width 0.6s ease'">
+            </div>
+          </div>
+          <div class="pg-labels">
+            <span>0%</span>
+            <span class="pg-pct">{{ progresoReal }}% completado</span>
+            <span>100%</span>
+          </div>
+        </div>
+      }
+
+      <div class="accordion">
+        @for (sec of secciones; track sec.titulo; let si = $index) {
+          <div class="acc-item" [class.open]="seccionAbierta() === si">
+
+            <button class="acc-header" (click)="toggleSeccion(si)">
+              <div class="acc-left">
+                <span class="acc-num">{{ si + 1 }}</span>
+                <div class="acc-meta">
+                  <span class="acc-titulo">{{ sec.titulo }}</span>
+                  <span class="acc-info">
+                    {{ sec.lecciones.length }} lecciones · {{ sec.duracion }}
+                  </span>
+                </div>
+              </div>
+              <div class="acc-right">
+               
+                @if (inscrito()) {
+                  <span class="sec-prog">
+                    {{ sec.lecciones.filter(l => l.completada).length }}/{{ sec.lecciones.length }}
+                  </span>
+                }
+                <span class="acc-chevron" [class.rotated]="seccionAbierta() === si"></span>
+              </div>
+            </button>
+
+            @if (seccionAbierta() === si) {
+              <div class="acc-body">
+                @for (lec of sec.lecciones; track lec.titulo; let li = $index) {
+                  <div class="lec-row"
+                       [class.completada]="lec.completada"
+                       [class.clickable]="inscrito() || lec.libre"
+                       (click)="inscrito() ? toggleLeccion(si, li) : null">
+
+                    <div class="lec-check" [class.checked]="lec.completada">
+                      @if (lec.completada) { ✓ }
+                    </div>
+
+                    <span class="lec-tipo">{{ tipoIcon(lec.tipo) }}</span>
+
+                    <span class="lec-titulo">{{ lec.titulo }}</span>
+
+                    <div class="lec-badges">
+                      @if (lec.libre) {
+                        <span class="badge-libre">Vista previa</span>
+                      }
+                      @if (!inscrito() && !lec.libre) {
+                        <span class="badge-lock"></span>
+                      }
+                      <span class="lec-dur">{{ lec.duracion }}</span>
+                    </div>
+
+                  </div>
+                }
+              </div>
+            }
+
+          </div>
+        }
+      </div>
+
+    </div>
+  </section>
+
+  <section class="resenas-section">
+    <div class="container">
+      <h2>Valoraciones de estudiantes</h2>
+
+      @if (resenas().length === 0) {
+        <div class="no-resenas">
+          <span></span>
+          <p>Sé el primero en valorar este curso</p>
+        </div>
+      }
+
+      @if (resenas().length > 0) {
+        <div class="resenas-grid">
+          @for (r of resenas(); track r.estudianteId) {
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">{{ r.estudianteNombre.charAt(0) }}</div>
+                <div>
+                  <span class="resena-nombre">{{ r.estudianteNombre }}</span>
+                  <div class="resena-stars">{{ stars(r.calificacion) }} {{ r.calificacion }}/5</div>
+                </div>
+              </div>
+              <p class="resena-texto">
+                {{ r.resenaTexto || 'Excelente curso, muy completo y bien explicado.' }}
+              </p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+}
+
+@if (showPagoModal()) {
+  <div class="modal-overlay" (click)="showPagoModal.set(false)">
+    <div class="modal-pago" (click)="$event.stopPropagation()">
+
+      <button class="mp-close" (click)="showPagoModal.set(false)">✕</button>
+
+      @if (metodoPago() === 'gratis') {
+        <div class="mp-content gratis">
+          <div class="mp-icon"></div>
+          <h2>Acceso Gratuito</h2>
+          <p>Obtendrás acceso inmediato a todo el contenido del curso sin ningún costo.</p>
+
+          <div class="mp-detalles">
+            <div class="mp-det-item">
+              <span></span>
+              <span>Acceso instantáneo</span>
+            </div>
+            <div class="mp-det-item">
+              <span></span>
+              <span>Sin tarjeta requerida</span>
+            </div>
+            <div class="mp-det-item">
+              <span></span>
+              <span>Certificado incluido</span>
+            </div>
+          </div>
+
+          <button class="btn-confirmar gratis" (click)="confirmarInscripcion()">
+            Inscribirme Gratis Ahora
+          </button>
+        </div>
+      }
+
+      @if (metodoPago() === 'deposito') {
+        <div class="mp-content deposito">
+          <div class="mp-icon"></div>
+          <h2>Pago por Depósito</h2>
+          <p>Realiza una transferencia bancaria y envía el comprobante para activar tu acceso.</p>
+
+          <div class="mp-banco">
+            <h3>Datos bancarios:</h3>
+            <div class="banco-grid">
+              <div class="banco-item">
+                <span class="bi-label">Banco</span>
+                <span class="bi-valor">Banco Produbanco</span>
+              </div>
+              <div class="banco-item">
+                <span class="bi-label">Tipo de cuenta</span>
+                <span class="bi-valor">Ahorros</span>
+              </div>
+              <div class="banco-item">
+                <span class="bi-label">Número de cuenta</span>
+                <span class="bi-valor">20008516081</span>
+              </div>
+              <div class="banco-item">
+                <span class="bi-label">Titular</span>
+                <span class="bi-valor">Jenny Vaque</span>
+              </div>
+              <div class="banco-item">
+                <span class="bi-label">Cédula</span>
+                <span class="bi-valor">0955555560</span>
+              </div>
+              <div class="banco-item">
+                <span class="bi-label">Monto a depositar</span>
+                <span class="bi-valor monto">${{ curso()!.precio }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mp-pasos">
+            <p class="pasos-titulo">Pasos para completar:</p>
+            <div class="paso">
+              <span class="paso-num">1</span>
+              <span>Realiza el depósito con los datos de arriba</span>
+            </div>
+            <div class="paso">
+              <span class="paso-num">2</span>
+              <span>Guarda el comprobante de depósito</span>
+            </div>
+            <div class="paso">
+              <span class="paso-num">3</span>
+              <span>Envíalo a <strong>jennyvaque01@gmail.com</strong></span>
+            </div>
+            <div class="paso">
+              <span class="paso-num">4</span>
+              <span>Recibirás acceso en menos de 24 horas</span>
+            </div>
+          </div>
+
+          <button class="btn-confirmar deposito" (click)="confirmarInscripcion()">
+            Ya realicé el depósito
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

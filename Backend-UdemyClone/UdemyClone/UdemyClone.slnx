@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="UdemyClone.Application/UdemyClone.Application.csproj" Id="13b2b3bf-e01c-4fe3-9e9e-dbf8efe6722c" />
+  <Project Path="UdemyClone.Domain/UdemyClone.Domain.csproj" Id="645867bd-6de3-4782-ab8e-fb296e308356" />
+  <Project Path="UdemyClone.Infrastructure/UdemyClone.Infrastructure.csproj" Id="59c6606d-5573-4d2f-849f-0a4f45189816" />
+  <Project Path="UdemyClone.Shared/UdemyClone.Shared.csproj" Id="401ff04f-c0f4-4a45-8620-c07b8e87fad2" />
+  <Project Path="UdemyClone/UdemyClone.WebApi.csproj" />
+</Solution>

@@ -1,0 +1,151 @@
+<section class="courses-header">
+  <div class="header-glow"></div>
+  <div class="container">
+    <span class="tag">Catálogo completo</span>
+    <h1>Todos los <span class="gradient-text">Cursos</span></h1>
+    <p>Aprende con nuestros cursos diseñados por expertos. ¡Todos gratuitos!</p>
+    <div class="search-hero">
+      <span></span>
+      <input type="text" placeholder="Buscar cursos..."
+             [value]="searchTerm"
+             (input)="searchTerm = $any($event.target).value" />
+    </div>
+  </div>
+</section>
+
+<!-- Layout -->
+<section class="courses-body">
+  <div class="container courses-layout">
+
+    <!-- Sidebar filtros -->
+    <aside class="filters-sidebar">
+      <div class="filter-box">
+        <h3> Categorías</h3>
+        <div class="filter-list">
+          <button class="filter-item"
+                  [class.active]="filtroCategoria === 0"
+                  (click)="filtroCategoria = 0">
+            Todas
+          </button>
+          @for (c of categorias; track c.categoriaId) {
+            <button class="filter-item"
+                    [class.active]="filtroCategoria === c.categoriaId"
+                    (click)="filtroCategoria = c.categoriaId">
+              {{ c.nombre }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-box">
+        <h3> Nivel</h3>
+        <div class="filter-list">
+          <button class="filter-item"
+                  [class.active]="filtroNivel === ''"
+                  (click)="filtroNivel = ''">
+            Todos
+          </button>
+          @for (n of ['Principiante','Intermedio','Avanzado']; track n) {
+            <button class="filter-item"
+                    [class.active]="filtroNivel === n"
+                    (click)="filtroNivel = n">
+              {{ n }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="free-box">
+        <span></span>
+        <div>
+          <strong>¡Todos gratis!</strong>
+          <p>Sin costo adicional</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Cursos -->
+    <div class="courses-main">
+      <div class="results-bar">
+        <span>{{ cursosFiltrados.length }} cursos encontrados</span>
+        @if (filtroCategoria !== 0 || filtroNivel || searchTerm) {
+          <button class="clear-btn"
+                  (click)="filtroCategoria = 0; filtroNivel = ''; searchTerm = ''">
+            ✕ Limpiar
+          </button>
+        }
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando cursos...</p>
+        </div>
+      }
+
+      @if (!loading) {
+        <div class="courses-grid">
+          @for (c of cursosFiltrados; track c.cursoId) {
+            <a [routerLink]="['/cursos', c.cursoId]" class="course-card">
+
+              <!-- Thumbnail -->
+              <div class="card-thumb" [style.background]="getThumbBg(c.categoriaId)">
+                  <span class="card-icon material-icons">
+                    {{ getIconoPorCategoria(c.categoriaId) }}
+                  </span>
+                <span class="card-nivel"
+                      [style.background]="nivelColor(c.nivel) + '33'"
+                      [style.color]="nivelColor(c.nivel)"
+                      [style.border-color]="nivelColor(c.nivel) + '66'">
+                  {{ c.nivel }}
+                </span>
+                <div class="card-overlay">
+                  <span>Ver curso →</span>
+                </div>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <span class="card-cat">{{ c.categoriaNombre }}</span>
+                <h3 class="card-title">{{ c.titulo }}</h3>
+
+                @if (c.descripcion) {
+                  <p class="card-desc">
+                    {{ c.descripcion.length > 75
+                       ? c.descripcion.slice(0, 75) + '...'
+                       : c.descripcion }}
+                  </p>
+                }
+
+                <div class="card-meta">
+                  @if (c.idioma) { <span class="meta-tag">{{ c.idioma }}</span> }
+                  @if (c.nivel)  { <span class="meta-tag"> {{ c.nivel }}</span>  }
+                </div>
+
+                <div class="card-footer">
+                  <div class="price-wrap">
+                    <span class="price-free">GRATIS</span>
+                    <span class="price-old">${{ c.precio }}</span>
+                  </div>
+                  <span class="ver-btn">Ver →</span>
+                </div>
+              </div>
+
+            </a>
+          }
+
+          @empty {
+            <div class="empty-state">
+              <span></span>
+              <p>No se encontraron cursos</p>
+              <button (click)="filtroCategoria=0; filtroNivel=''; searchTerm=''">
+                Limpiar filtros
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+</section>

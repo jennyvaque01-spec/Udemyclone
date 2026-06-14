@@ -1,0 +1,127 @@
+<div class="crud-page">
+  <div class="page-header">
+    <div><h1> Reseñas</h1><p>Gestiona las reseñas y calificaciones de los cursos</p></div>
+    <button class="btn-add" (click)="openCreate()">Nueva Reseña</button>
+  </div>
+
+  @if (successMsg()) { <div class="toast-success"> {{ successMsg() }}</div> }
+
+  <div class="search-bar">
+    <span></span>
+    <input type="text" placeholder="Buscar por estudiante o curso..."
+           [value]="searchTerm()"
+           (input)="searchTerm.set($any($event.target).value)" />
+    <span class="count-badge">{{ filtered.length }} registros</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state"><div class="spinner spinner-lg"></div><p>Cargando reseñas...</p></div>
+  }
+
+  @if (!loading()) {
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Estudiante</th><th>Curso</th><th>Calificación</th><th>Reseña</th><th>Fecha</th><th>Acc.</th></tr>
+          </thead>
+          <tbody>
+            @for (r of filtered; track r.estudianteId + '-' + r.cursoId; let i = $index) {
+              <tr>
+                <td><span class="row-num">{{ i + 1 }}</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar">{{ r.estudianteNombre.charAt(0) }}</div>
+                    <span>{{ r.estudianteNombre }}</span>
+                  </div>
+                </td>
+                <td><span class="curso-name">{{ r.cursoTitulo }}</span></td>
+                <td>
+                  <div class="stars-cell">
+                    <span class="stars-text">{{ stars(r.calificacion) }}</span>
+                    <span class="stars-num">{{ r.calificacion }}/5</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="resena-text">
+                    {{ r.resenaTexto ? (r.resenaTexto.length > 40 ? r.resenaTexto.slice(0,40) + '...' : r.resenaTexto) : '—' }}
+                  </span>
+                </td>
+                <td>{{ r.fecha | date:'dd/MM/yy' }}</td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-del" (click)="confirmDeleteResena(r.estudianteId, r.cursoId)"></button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr><td colspan="7" class="empty-row">No hay reseñas</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2> Nueva Reseña</h2>
+        <button class="modal-x" (click)="closeModal()">✕</button>
+      </div>
+      @if (errorMsg()) { <div class="alert-error"> {{ errorMsg() }}</div> }
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Estudiante *</label>
+            <select formControlName="estudianteId">
+              <option [ngValue]="0">Seleccionar...</option>
+              @for (e of estudiantes; track e.estudianteId) {
+                <option [ngValue]="e.estudianteId">{{ e.nombre }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Curso </label>
+            <select formControlName="cursoId">
+              <option [ngValue]="0">Seleccionar...</option>
+              @for (c of cursos; track c.cursoId) {
+                <option [ngValue]="c.cursoId">{{ c.titulo }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Calificación (1-5) </label>
+          <input type="number" formControlName="calificacion" min="1" max="5"/>
+          <span class="stars-preview">{{ stars(form.get('calificacion')?.value ?? 0) }}</span>
+        </div>
+        <div class="form-group">
+          <label>Reseña (opcional)</label>
+          <textarea formControlName="resenaTexto" placeholder="Escribe una reseña..." rows="3"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="form.invalid">Crear Reseña</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showConfirm()) {
+  <div class="modal-overlay" (click)="closeConfirm()">
+    <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"></div>
+      <h2>¿Eliminar reseña?</h2>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-footer center">
+        <button class="btn-cancel" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+}

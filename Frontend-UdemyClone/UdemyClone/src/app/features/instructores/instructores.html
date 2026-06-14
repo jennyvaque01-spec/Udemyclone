@@ -1,0 +1,134 @@
+<div class="crud-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Instructor</h1>
+      <p>Gestiona todos los instructores registrados en la plataforma</p>
+    </div>
+    <button class="btn-add" (click)="openCreate()">Nuevo Instructor</button>
+  </div>
+
+  <!-- Toast -->
+  @if (successMsg()) {
+    <div class="toast-success"> {{ successMsg() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="search-bar">
+    <span></span>
+    <input type="text" placeholder="Buscar por nombre o email..."
+           [value]="searchTerm()"
+           (input)="searchTerm.set($any($event.target).value)" />
+    <span class="count-badge">{{ filtered.length }} registros</span>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner spinner-lg"></div>
+      <p>Cargando instructores...</p>
+    </div>
+  }
+
+  <!-- Tabla -->
+  @if (!loading()) {
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Fecha Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of filtered; track e.instructorId; let i = $index) {
+              <tr>
+                <td><span class="row-num">{{ i + 1 }}</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar">{{ e.nombre.charAt(0) }}</div>
+                    <span>{{ e.nombre }}</span>
+                  </div>
+                </td>
+                <td><span class="email-tag">{{ e.email }}</span></td>
+                <td>{{ e.fechaRegistro | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-edit"   (click)="openEdit(e)"></button>
+                    <button class="btn-del"    (click)="confirmDelete(e.instructorId)"></button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="5" class="empty-row">No se encontraron instructores</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+</div>
+
+<!-- Modal Crear/Editar -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editMode() ? 'Editar' : 'Nuevo' }} Instructor</h2>
+        <button class="modal-x" (click)="closeModal()"></button>
+      </div>
+
+      @if (errorMsg()) {
+        <div class="alert-error">{{ errorMsg() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Nombre completo </label>
+          <input type="text" formControlName="nombre" placeholder="Ej: Juan Martínez"
+                 [class.error]="form.get('nombre')?.invalid && form.get('nombre')?.touched" />
+          @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+            <span class="error-text">Nombre requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Email </label>
+          <input type="email" formControlName="email" placeholder="correo@ejemplo.com"
+                 [class.error]="form.get('email')?.invalid && form.get('email')?.touched" />
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <span class="error-text">Email válido requerido</span>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="form.invalid">
+            {{ editMode() ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Confirm Eliminar -->
+@if (showConfirm()) {
+  <div class="modal-overlay" (click)="closeConfirm()">
+    <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"></div>
+      <h2>¿Eliminar instructor?</h2>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-footer center">
+        <button class="btn-cancel" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+}

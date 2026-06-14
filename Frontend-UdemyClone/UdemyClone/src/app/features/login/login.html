@@ -1,0 +1,94 @@
+<div class="login-page">
+
+  <div class="login-left">
+    <div class="ll-blob b1"></div>
+    <div class="ll-blob b2"></div>
+    <div class="ll-content">
+      <a routerLink="/">
+        <img src="assets/logo.png" alt="Tech Academy" class="ll-logo"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="ll-logo-text">
+          <span class="t">TECH</span><span class="s">/</span><span class="a">Academy</span>
+        </div>
+      </a>
+      <h2>Bienvenido al<br><span class="gradient-text">Panel Administrativo</span></h2>
+      <p>Gestiona cursos, estudiantes, instructores y más desde un solo lugar.</p>
+      <div class="ll-features">
+        @for (f of features; track f.text) {
+          <div class="ll-feat">
+            <span class="lf-icon material-icons">{{ f.icon }}</span>
+            <span>{{ f.text }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+
+      <div class="lc-header">
+        <div class="lc-icon"></div>
+        <h1>Iniciar Sesión</h1>
+        <p>Ingresa tus credenciales para continuar</p>
+      </div>
+
+      @if (errorMsg()) {
+        <div class="alert-error"> {{ errorMsg() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <div class="input-wrap">
+            <span class="iw-icon"></span>
+            <input type="email" formControlName="email"
+                   placeholder="admin@techacademy.com"
+                   autocomplete="email"
+                   [class.error]="form.get('email')?.invalid && form.get('email')?.touched" />
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <span class="error-text">Email válido requerido</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-wrap">
+            <span class="iw-icon"></span>
+            <input [type]="showPass() ? 'text' : 'password'"
+                   formControlName="password"
+                   placeholder=""
+                   autocomplete="current-password"
+                   [class.error]="form.get('password')?.invalid && form.get('password')?.touched" />
+            <button type="button" class="toggle-pass"
+                    (click)="showPass.update(v => !v)">
+              {{ showPass() ? '' : '' }}
+            </button>
+          </div>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <span class="error-text">Mínimo 6 caracteres</span>
+          }
+        </div>
+
+        <button type="submit" class="btn-login"
+                [disabled]="form.invalid || loading()">
+          @if (loading()) {
+            <span class="spinner spinner-sm"></span>
+            <span>Verificando...</span>
+          } @else {
+            <span>Iniciar Sesión </span>
+          }
+        </button>
+
+      </form>
+
+      <div class="lc-footer">
+         <a routerLink="/">
+          <i class="fas fa-arrow-left"></i> Volver al inicio </a>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,98 @@
+<div class="dashboard">
+
+<div class="stats-section">
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <h2><i class="fas fa-chart-bar"></i> Inscripciones por mes</h2>
+      <span class="chart-badge">2025</span>
+    </div>
+    <div class="chart-wrapper">
+      <canvas #barChart></canvas>
+    </div>
+  </div>
+
+  <div class="activity-card">
+    <div class="chart-header">
+      <h2><i class="fas fa-clock"></i> Actividad Reciente</h2>
+      <span class="chart-badge live">● En vivo</span>
+    </div>
+    <div class="activity-list">
+      @for (a of recentActivity; track a.id) {
+        <div class="activity-item">
+          <div class="ai-icon" [style.background]="a.color + '22'">
+            <i [class]="a.icon" [style.color]="a.color"></i>
+          </div>
+          <div class="ai-info">
+            <span class="ai-title">{{ a.title }}</span>
+            <span class="ai-sub">{{ a.sub }}</span>
+          </div>
+          <span class="ai-time">{{ a.time }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>
+  <div class="welcome-card">
+    <div class="wc-glow"></div>
+    <div class="wc-content">
+      <div class="wc-text">
+        <h1>{{ hora }}, <span class="gradient-text">{{ email }}</span> </h1>
+        <p>Bienvenido al panel administrativo de Tech Academy.</p>
+      </div>
+      <img src="assets/logo-icon.png" alt="" class="wc-img"
+           onerror="this.style.display='none'" />
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    @for (s of stats(); track s.label) {
+      <a [routerLink]="s.path" class="stat-card"
+         [style.--c]="s.color">
+        <div class="sc-bar"></div>
+        <div class="sc-icon">
+        <i [class]="s.icon"></i>
+      </div>
+      <div class="sc-info">
+          @if (loading()) {
+            <span class="sc-loading">...</span>
+          } @else {
+            <span class="sc-value">{{ s.value }}</span>
+          }
+          <span class="sc-label">{{ s.label }}</span>
+        </div>
+        <span class="sc-arrow">→</span>
+      </a>
+    }
+  </div>
+
+  <div class="quick-section">
+    <h2>Accesos Rápidos</h2>
+    <div class="quick-grid">
+      @for (q of quickLinks; track q.path) {
+        <a [routerLink]="q.path" class="quick-card">
+          <span class="qc-icon"><i [class]="q.icon"></i></span>
+          <span class="qc-label">{{ q.label }}</span>
+          <span class="qc-arrow">→</span>
+        </a>
+      }
+    </div>
+  </div>
+
+  <div class="system-section">
+    <h2>Información del Sistema</h2>
+    <div class="system-grid">
+      @for (s of systemInfo; track s.title) {
+        <div class="system-card">
+          <span class="sys-icon"><i [class]="s.icon"></i></span>
+          <div>
+            <strong>{{ s.title }}</strong>
+            <span>{{ s.desc }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>

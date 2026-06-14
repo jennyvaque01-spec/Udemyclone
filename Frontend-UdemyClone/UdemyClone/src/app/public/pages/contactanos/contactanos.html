@@ -1,0 +1,108 @@
+<section class="ct-header">
+  <div class="container">
+    <span class="tag">Comunícate con nosotros</span>
+    <h1>Contác<span class="gradient-text">tanos</span></h1>
+    <p>¿Tienes preguntas? Estamos aquí para ayudarte.</p>
+  </div>
+</section>
+
+<section class="ct-body">
+  <div class="container ct-grid">
+
+    <div class="ct-info">
+      <img src="assets/logo.png" alt="Tech Academy" style="width: 120px; margin-bottom: 2rem;">
+      <h2>Información de contacto</h2>
+      <p class="info-sub">Respondemos en menos de 24 horas hábiles.</p>
+
+     <div class="info-list">
+  @for (i of info; track i.label) {
+    <div class="info-item">
+      <div class="ii-icon"><i [class]="i.icon"></i></div>
+      <div>
+        <span class="ii-label">{{ i.label }}</span>
+        <span class="ii-valor">{{ i.valor }}</span>
+      </div>
+    </div>
+  }
+</div>
+
+      <div class="social-area">
+        <h3>Síguenos en redes</h3>
+       <div class="social-pills">
+        @for (s of socials; track s.nombre) {
+          <a [href]="s.url" target="_blank" rel="noopener" class="social-pill">
+            <i [class]="s.icon"></i> {{ s.nombre }}
+          </a>
+        }
+</div>
+      </div>
+    </div>
+
+    <div class="ct-form-card">
+      <h2>Envíanos un mensaje</h2>
+
+      @if (enviado()) {
+        <div class="alert-success">
+          ¡Mensaje enviado! Te responderemos pronto.
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre completo </label>
+            <input type="text" formControlName="nombre"
+                   placeholder="Tu nombre completo"
+                   [class.error]="form.get('nombre')?.invalid && form.get('nombre')?.touched" />
+            @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+              <span class="error-text">Mínimo 3 caracteres</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Email </label>
+            <input type="email" formControlName="email"
+                   placeholder="tu@email.com"
+                   [class.error]="form.get('email')?.invalid && form.get('email')?.touched" />
+            @if (form.get('email')?.invalid && form.get('email')?.touched) {
+              <span class="error-text">Email válido requerido</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Asunto </label>
+          <select formControlName="asunto"
+                  [class.error]="form.get('asunto')?.invalid && form.get('asunto')?.touched">
+            <option value="">Selecciona un asunto</option>
+            <option value="soporte">Soporte técnico</option>
+            <option value="cursos">Información de cursos</option>
+            <option value="inscripcion">Inscripciones</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Mensaje </label>
+          <textarea formControlName="mensaje"
+                    placeholder="Escribe tu mensaje aquí..." rows="5"
+                    [class.error]="form.get('mensaje')?.invalid && form.get('mensaje')?.touched">
+          </textarea>
+          @if (form.get('mensaje')?.invalid && form.get('mensaje')?.touched) {
+            <span class="error-text">Mínimo 10 caracteres</span>
+          }
+        </div>
+
+        <button type="submit" class="btn-submit"
+                [disabled]="form.invalid || loading()">
+          @if (loading()) {
+            <span class="spinner spinner-sm"></span>
+            <span>Enviando...</span>
+          } @else {
+            <span>Enviar Mensaje</span>
+          }
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>

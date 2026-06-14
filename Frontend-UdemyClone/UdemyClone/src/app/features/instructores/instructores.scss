@@ -1,0 +1,262 @@
+@use '../../../styles' as *;
+@use '../estudiantes/estudiantes.scss';
+.avatar { background: linear-gradient(135deg, #F97316, #EC4899) !important; }
+.crud-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #F8FAFC;
+  }
+
+  p {
+    color: #64748B;
+    font-size: 0.88rem;
+    margin-top: 0.2rem;
+  }
+}
+
+.table-card {
+  background: #1E293B;
+  border: 1px solid #2E3A4E;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+thead {
+  tr {
+    background: #162032;
+    border-bottom: 1px solid #2E3A4E;
+  }
+
+  th {
+    padding: 0.9rem 1.1rem;
+    text-align: left;
+    color: #64748B;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+}
+
+tbody {
+  tr {
+    border-bottom: 1px solid #162032;
+    transition: background 0.15s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(124, 58, 237, 0.04);
+    }
+  }
+
+  td {
+    padding: 0.9rem 1.1rem;
+    color: #94A3B8;
+    font-size: 0.88rem;
+    vertical-align: middle;
+  }
+}
+
+.row-num {
+  background: #162032;
+  color: #64748B;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #F8FAFC;
+  font-weight: 500;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+
+  &.pink {
+    background: linear-gradient(135deg, #EC4899, #F97316) !important;
+  }
+}
+
+.email-badge {
+  background: rgba(124, 58, 237, 0.08);
+  color: #A855F7;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+
+  button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+}
+
+.btn-edit {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.2);
+
+  &:hover {
+    background: #38BDF8;
+    border-color: #38BDF8;
+  }
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+
+  &:hover {
+    background: #EF4444;
+    border-color: #EF4444;
+  }
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #EC4899, #7C3AED);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: #1E293B;
+  border: 1px solid #2E3A4E;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.25s ease;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
+
+  label {
+    color: #94A3B8;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    background: #0F172A;
+    border: 1.5px solid #2E3A4E;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: #F8FAFC;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #7C3AED;
+    }
+
+    &.error {
+      border-color: #EF4444;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .page-header {
+    flex-direction: column;
+  }
+  .btn-add {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,276 @@
+@if (anuncioVisible()) {
+  <div class="anuncio-bar">
+    <span class="anuncio-text">
+      ¡Acceso gratuito a todos los cursos por tiempo limitado!
+      <a routerLink="/cursos">Inscríbete ahora</a>
+    </span>
+    <button class="anuncio-close" (click)="anuncioVisible.set(false)">✕</button>
+  </div>
+}
+
+<section class="hero-section">
+  <div class="hero-inner">
+
+    <div class="hero-text">
+      <h1>
+        {{ slides[slide()].titulo }}<br>
+        <span class="hero-italic">{{ slides[slide()].subtitulo }}</span>
+      </h1>
+      <p>{{ slides[slide()].desc }}</p>
+      <div class="hero-btns">
+        <a routerLink="/cursos" class="btn-hero-primary">
+          {{ slides[slide()].btn }}
+        </a>
+        <a routerLink="/quienes-somos" class="btn-hero-outline">
+          Conocer más
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-img-area">
+      <div class="hero-img-card">
+        <img [src]="slides[slide()].img"
+             [alt]="slides[slide()].titulo"
+             class="hero-img"
+             (error)="$any($event.target).style.display='none';
+                      $any($event.target).nextElementSibling.style.display='flex'" />
+        <div class="hero-fallback">
+          <span>{{ slides[slide()].fallback }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-dots">
+    @for (s of slides; track $index) {
+      <button class="hdot"
+              [class.active]="$index === slide()"
+              (click)="slide.set($index)">
+      </button>
+    }
+  </div>
+
+  <button class="harrow prev" (click)="prev()">‹</button>
+  <button class="harrow next" (click)="next()">›</button>
+</section>
+
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-row">
+      @for (s of stats; track s.label; let last = $last) {
+        <div class="stat-box">
+          <span class="stat-icon">{{ s.icon }}</span>
+          <span class="stat-num">{{ s.num }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+        @if (!last) {
+          <div class="stat-div"></div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<section class="habilidades-section">
+  <div class="container">
+    <div class="hab-layout">
+
+      <div class="hab-text">
+        <h2>
+          Aprende habilidades <em>esenciales</em><br>
+          para el trabajo y la vida
+        </h2>
+        <p>
+          Tech Academy te ayuda a desarrollar las habilidades más demandadas
+          para impulsar tu carrera profesional en el mundo tecnológico.
+        </p>
+        <a routerLink="/cursos" class="btn-hero-outline small">
+          Ver todas las categorías 
+        </a>
+      </div>
+
+      <div class="hab-cards">
+        @for (h of habilidades; track h.titulo) {
+          <a routerLink="/cursos" class="hab-card" [style.background]="h.bg">
+            <img [src]="h.img"
+                 [alt]="h.titulo"
+                 (error)="$any($event.target).style.display='none';
+                          $any($event.target).nextElementSibling.style.display='flex'" />
+            <div class="hab-fallback">{{ h.fallback }}</div>
+            <div class="hab-label">
+              <span>{{ h.titulo }}</span>
+              <span class="hab-arrow"></span>
+            </div>
+          </a>
+        }
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="trending-section">
+  <div class="container">
+
+    <div class="sec-header">
+      <div>
+        <span class="sec-tag"> Más populares</span>
+        <h2>Cursos en tendencia</h2>
+      </div>
+      <a routerLink="/cursos" class="see-all">Ver todos </a>
+    </div>
+
+    <div class="trending-scroll">
+      @for (c of cursosTendencia; track c.id) {
+        <a [routerLink]="['/cursos', c.id]" class="trend-card">
+
+          <div class="trend-thumb">
+            <img [src]="c.img"
+                 [alt]="c.titulo"
+                 class="thumb-img"
+                 (error)="$any($event.target).style.display='none'" />
+            <div class="trend-overlay">Ver curso </div>
+          </div>
+
+          <div class="trend-body">
+            <h4>{{ c.titulo }}</h4>
+            <p class="trend-instructor">{{ c.instructor }}</p>
+
+            <div class="trend-rating">
+              <span class="tr-num">{{ c.rating }}</span>
+              <span class="tr-stars">{{ stars(c.rating) }}</span>
+              <span class="tr-reviews">({{ c.reviews | number }})</span>
+            </div>
+
+            <div class="trend-footer">
+              <span class="trend-free">GRATIS</span>
+              <span class="trend-price">${{ c.precio }}</span>
+              <span class="trend-nivel"
+                    [style.color]="nivelColor(c.nivel)">
+                {{ c.nivel }}
+              </span>
+            </div>
+          </div>
+
+        </a>
+      }
+    </div>
+
+  </div>
+</section>
+
+<section class="instructores-section">
+  <div class="container">
+
+    <div class="sec-header">
+      <div>
+        <span class="sec-tag">Equipo docente</span>
+        <h2>Nuestros instructores</h2>
+      </div>
+      <a routerLink="/quienes-somos" class="see-all">Conocer más </a>
+    </div>
+
+    <div class="inst-grid">
+      @for (i of instructores; track i.nombre) {
+        <div class="inst-card">
+          <div class="inst-avatar">{{ i.inicial }}</div>
+          <h4>{{ i.nombre }}</h4>
+          <p class="inst-rol">{{ i.rol }}</p>
+          <div class="inst-stats">
+            <span>{{ i.cursos }} cursos</span>
+            <span>{{ i.estudiantes }} alumnos</span>
+          </div>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<section class="why-section">
+  <div class="container">
+    <div class="why-layout">
+
+      <div class="why-text">
+        <span class="sec-tag"> Nuestra ventaja</span>
+        <h2>¿Por qué elegir<br>
+          <span class="gradient-text">Tech Academy?</span>
+        </h2>
+
+        <div class="why-list">
+          <div class="why-item">
+            <span class="wi-icon"></span>
+            <div>
+              <strong>Cursos 100% gratuitos</strong>
+              <p>Accede a todo el contenido sin ningún costo adicional.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="wi-icon"></span>
+            <div>
+              <strong>Aprende a tu ritmo</strong>
+              <p>Sin fechas límite, avanza cuando y donde quieras.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="wi-icon"></span>
+            <div>
+              <strong>Instructores certificados</strong>
+              <p>Profesionales con experiencia real en la industria.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="wi-icon"></span>
+            <div>
+              <strong>Certificado al completar</strong>
+              <p>Valida tus conocimientos con un certificado oficial.</p>
+            </div>
+          </div>
+        </div>
+
+        <a routerLink="/login" class="btn-hero-primary">
+          Comenzar ahora 
+        </a>
+      </div>
+
+      <div class="why-visual">
+        <div class="wv-card main">
+          <span class="wv-icon"></span>
+          <strong>Tech Academy</strong>
+          <p>Plataforma de aprendizaje</p>
+        </div>
+        <div class="wv-card sm c1">
+          <span></span><span>Dashboard admin</span>
+        </div>
+        <div class="wv-card sm c2">
+          <span></span><span>JWT Seguro</span>
+        </div>
+        <div class="wv-card sm c3">
+          <span></span><span>Responsive</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-glow"></div>
+      <div class="cta-content">
+        <h2>¿Listo para transformar tu carrera?</h2>
+        <p>Únete a Tech Academy y accede a todos los cursos completamente gratis</p>
+        <div class="cta-btns">
+          <a routerLink="/cursos" class="btn-hero-primary large">
+            Explorar cursos gratis
+          </a>
+          <a routerLink="/login" class="btn-cta-outline">
+            Panel Administrativo 
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

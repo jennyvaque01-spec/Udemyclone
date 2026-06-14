@@ -1,0 +1,88 @@
+<div class="admin-shell" [class.collapsed]="!sidebarOpen()">
+
+  @if (mobileSidebar()) {
+    <div class="mobile-overlay" (click)="toggleMobileSidebar()"></div>
+  }
+
+  <aside class="sidebar"
+         [class.open]="sidebarOpen()"
+         [class.mobile-open]="mobileSidebar()">
+
+    <div class="sb-logo">
+      @if (sidebarOpen()) {
+        <a routerLink="/admin">
+          <img src="assets/logo.png" alt="Tech Academy" class="logo-img"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="logo-text">
+            <span class="t">TECH</span><span class="s">/</span><span class="a">Academy</span>
+          </div>
+        </a>
+      } @else {
+        <a routerLink="/admin" class="logo-mini">{{ inicial }}</a>
+      }
+    </div>
+
+    <nav class="sb-nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: item.exact ?? false}"
+           class="nav-item"
+           [title]="item.label"
+           (click)="mobileSidebar.set(false)">
+          <span class="ni-icon"><i [class]="item.icon"></i></span>
+          @if (sidebarOpen()) {
+            <span class="ni-label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    @if (sidebarOpen()) {
+      <div class="sb-user">
+        <div class="su-avatar">{{ inicial }}</div>
+        <div class="su-info">
+          <span class="su-email">{{ email }}</span>
+          <span class="su-rol">{{ rol }}</span>
+        </div>
+      </div>
+    }
+
+  </aside>
+
+  <div class="admin-body">
+
+    <header class="toolbar">
+      <div class="tb-left">
+
+        <button class="tb-mobile-toggle" (click)="toggleMobileSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <button class="tb-toggle" (click)="toggleSidebar()">
+          <i [class]="sidebarOpen() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+        </button>
+
+      </div>
+
+      <div class="tb-right">
+        <span class="tb-online">
+          <i class="fas fa-circle" style="font-size:0.5rem; margin-right: 4px;"></i> Online
+        </span>
+        <div class="tb-user">
+          <div class="tu-avatar">{{ inicial }}</div>
+          <span class="tu-email">{{ email }}</span>
+        </div>
+        <button class="btn-logout" (click)="logout()">
+          <i class="fas fa-right-from-bracket"></i> Salir
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <router-outlet />
+    </main>
+
+  </div>
+
+</div>

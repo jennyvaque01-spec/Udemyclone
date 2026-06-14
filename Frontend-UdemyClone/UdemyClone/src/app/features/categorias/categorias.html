@@ -1,0 +1,125 @@
+<div class="crud-page">
+  <div class="page-header">
+    <div>
+      <h1> Categorías</h1>
+      <p>Organiza los cursos por categorías y subcategorías</p>
+    </div>
+    <button class="btn-add" (click)="openCreate()"> Nueva Categoría</button>
+  </div>
+
+  @if (successMsg()) { <div class="toast-success"> {{ successMsg() }}</div> }
+
+  <div class="search-bar">
+    <span></span>
+    <input type="text" placeholder="Buscar categoría..."
+           [value]="searchTerm()"
+           (input)="searchTerm.set($any($event.target).value)" />
+    <span class="count-badge">{{ filtered.length }} registros</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner spinner-lg"></div>
+      <p>Cargando categorías...</p>
+    </div>
+  }
+
+  @if (!loading()) {
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Nombre</th><th>Tipo</th><th>Categoría Padre</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of filtered; track c.categoriaId; let i = $index) {
+              <tr>
+                <td><span class="row-num">{{ i + 1 }}</span></td>
+                <td>
+                  <div class="cat-cell">
+                    <span>{{ c.categoriaPadreId ? '' : '' }}</span>
+                    <span class="cat-nombre">{{ c.nombre }}</span>
+                  </div>
+                </td>
+                <td>
+                  @if (!c.categoriaPadreId) {
+                    <span class="badge-purple">Principal</span>
+                  } @else {
+                    <span class="badge-pink">Subcategoría</span>
+                  }
+                </td>
+                <td>
+                  @if (c.categoriaPadreNombre) {
+                    <span class="badge-neutral">{{ c.categoriaPadreNombre }}</span>
+                  } @else {
+                    <span class="text-muted"></span>
+                  }
+                </td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-edit" (click)="openEdit(c)"></button>
+                    <button class="btn-del"  (click)="confirmDelete(c.categoriaId)"></button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr><td colspan="5" class="empty-row">No se encontraron categorías</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editMode() ? 'Editar' : 'Nueva' }} Categoría</h2>
+        <button class="modal-x" (click)="closeModal()"></button>
+      </div>
+      @if (errorMsg()) { <div class="alert-error">{{ errorMsg() }}</div> }
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Nombre *</label>
+          <input type="text" formControlName="nombre" placeholder="Ej: Programación"
+                 [class.error]="form.get('nombre')?.invalid && form.get('nombre')?.touched"/>
+          @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+            <span class="error-text">Nombre requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Categoría Padre (opcional)</label>
+          <select formControlName="categoriaPadreId">
+            <option [ngValue]="null"> Sin categoría padre </option>
+            @for (r of raices; track r.categoriaId) {
+              <option [ngValue]="r.categoriaId">{{ r.nombre }}</option>
+            }
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="form.invalid">{{ editMode() ? 'Actualizar' : 'Crear' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showConfirm()) {
+  <div class="modal-overlay" (click)="closeConfirm()">
+    <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"></div>
+      <h2>¿Eliminar categoría?</h2>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-footer center">
+        <button class="btn-cancel" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+}

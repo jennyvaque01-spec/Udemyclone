@@ -1,0 +1,134 @@
+<section class="qs-header">
+  <div class="header-glow"></div>
+  <div class="container">
+    <span class="tag">Nuestro Equipo</span>
+    <h1>Quiénes <span class="gradient-text">Somos</span></h1>
+    <p>Soy una estudiante apasionada por la tecnología, construyendo
+       soluciones reales con las mejores herramientas del mercado.</p>
+  </div>
+</section>
+
+<section class="mision-section">
+  <div class="container mision-grid">
+    <div class="mision-text">
+      <span class="tag pink">Nuestra Misión</span>
+      <h2>Democratizar el <span class="gradient-text">aprendizaje tecnológico</span></h2>
+      <p>Tech Academy nació como proyecto final de un clon de Udemy con el objetivo
+         de replicar una plataforma de cursos online real usando las mejores prácticas.</p>
+      <p>Implementamos arquitectura limpia, autenticación JWT, logging con Serilog
+         y un frontend completamente responsive con Angular 21.</p>
+      <div class="mision-chips">
+        <span class="chip"> Clean Architecture</span>
+        <span class="chip"> JWT + BCrypt</span>
+        <span class="chip"> Responsive</span>
+        <span class="chip"> SQL Server</span>
+        <span class="chip"> Mailjet</span>
+        <span class="chip"> Serilog</span>
+      </div>
+    </div>
+    <div class="mision-visual">
+      <img src="assets/logo-icon.png" alt="Tech Academy"
+           class="mision-logo"
+           onerror="this.style.display='none'" />
+      <div class="mision-fallback"></div>
+    </div>
+  </div>
+</section>
+
+<section class="team-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">El equipo</span>
+      <h2>Desarrolladora del proyecto</h2>
+    </div>
+    <div class="team-center">
+      <div class="team-card">
+        <div class="team-avatar">JV</div>
+        <div class="team-info">
+          <h3>Jenny Vaque</h3>
+          <span class="team-rol">Fullstack Developer</span>
+          <p>Responsable del diseño de base de datos, backend en .NET 9,
+             frontend en Angular 21 y toda la arquitectura del sistema.
+             Apasionada por las buenas prácticas y el código limpio.</p>
+          <div class="team-skills">
+            @for (s of ['.NET 9','Angular 21','SQL Server','JWT','Serilog','Docker']; track s) {
+              <span class="skill-chip">{{ s }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="timeline-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Proceso</span>
+      <h2>Cómo se construyó el proyecto</h2>
+    </div>
+    <div class="timeline">
+      @for (t of timeline; track t.fase) {
+        <div class="tl-item">
+          <div class="tl-num">{{ t.fase }}</div>
+          <div class="tl-icon">{{ t.icon }}</div>
+          <div class="tl-content">
+            <h4>{{ t.titulo }}</h4>
+            <p>{{ t.desc }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="valores-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Lo que nos define</span>
+      <h2>Nuestros Valores</h2>
+    </div>
+    <div class="valores-grid">
+      @for (v of valores; track v.titulo) {
+        <div class="valor-card">
+          <div class="valor-icon">{{ v.icon }}</div>
+          <h3>{{ v.titulo }}</h3>
+          <p>{{ v.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="stack-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Stack técnico</span>
+      <h2>Tecnologías utilizadas</h2>
+    </div>
+    <div class="stack-grid">
+      @for (t of stack; track t.nombre) {
+        <div class="stack-card" [style.border-color]="t.color + '44'">
+          <span class="stack-dot" [style.background]="t.color"></span>
+          <div class="stack-info">
+            <strong [style.color]="t.color">{{ t.nombre }}</strong>
+            <span>{{ t.desc }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="qs-cta">
+  <div class="container">
+    <div class="cta-box">
+      <h2>¿Quieres ver el proyecto en acción?</h2>
+      <p>Accede al panel administrativo y explora todas las funcionalidades</p>
+      <div class="cta-btns">
+        <a routerLink="/login"  class="btn-primary-qs">Ingresar al Panel →</a>
+        <a routerLink="/cursos" class="btn-outline-qs">Ver Cursos</a>
+      </div>
+    </div>
+  </div>
+</section>
