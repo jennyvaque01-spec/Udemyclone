@@ -30,7 +30,7 @@ UdemyClone
 - Tabla de entidades de estudiantes, instructores, cursos, categorias, inscripciones y reseñas
 
 ## Guia de Creación de Base de datos
-Craeción de base de datos con la regla del documento 
+Creación y diseño de base de datos desde cero ( creacion de los script Sql)
 [Ver Proyecto Udemy PDF](./proyecto_de_creación_base_de_datos/Proyecto_Udemy.pdf)
 
 ## Diagrama de Base de Datos 
