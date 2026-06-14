@@ -32,6 +32,10 @@ UdemyClone
 ## Diagrama de Base de Datos 
  [Ver diagrama de relaciones en Excalidraw](https://excalidraw.com/#room=dd4605aba25230f90df6,30xbsPcO0cn59QCs0wY1Fw)
 
+## Borrador de diseño con excalidraw
+[Ver diagrama de tablas en Excalidraw](https://excalidraw.com/#json=zDkOVVr582WOgjIfdpgXZ,7eBOw2_9bnIobYuof4dMbg)
+
+
 ## Funcionalidades de Tech Academy
 
 ### Panel Público
@@ -53,6 +57,5 @@ UdemyClone
 - Autenticación con JWT
 - Rutas protegidas con Guards
 - Encriptación de contraseñas con BCrypt
- 
-2025
+
 
