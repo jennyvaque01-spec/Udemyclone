@@ -29,6 +29,10 @@ UdemyClone
 - SQL Server
 - Tabla de entidades de estudiantes, instructores, cursos, categorias, inscripciones y reseñas
 
+## Guia de Creación de Base de datos
+Craeción de base de datos con la regla del documento 
+[Ver Proyecto Udemy PDF](./proyecto_de_creación_base_de_datos/Proyecto_Udemy.pdf)
+
 ## Diagrama de Base de Datos 
  [Ver diagrama de relaciones en Excalidraw](https://excalidraw.com/#room=dd4605aba25230f90df6,30xbsPcO0cn59QCs0wY1Fw)
 
